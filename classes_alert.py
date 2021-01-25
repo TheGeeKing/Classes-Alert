@@ -36,17 +36,15 @@ def first_start():
   read_config()
   if config["Info"]["first_start"] == 1:
     print("Salut, je vais t'aider à arriver en cours à l'heure! :)")
-    print("Pour cela tu va devir me donner tes matières, tes heures de cours et si tu en as un, un lien!")
-    print("Ensuite je t'enverrais une notification sur ton pc avant chaque cours! Si tu m'auras fournis un lien tu pourra cliquer sur la notification et ça l'ouvrira")
+    print("Pour cela tu vas devoir me donner tes matières, tes heures de cours et si tu en as un, un lien!")
+    print("Ensuite je t'enverrais une notification sur ton pc avant chaque cours! Si tu m'auras fourni un lien tu pourras cliquer sur la notification et ça l'ouvrira")
     while True:
       try:
-        is_it_ok = str(input("ça te vas? Y/N : "))
+        is_it_ok = str(input("ça te va? Y/N : "))
         is_it_ok = is_it_ok.upper()
         if len(is_it_ok) > 1:
-          print("aouh")
           raise Exception
         elif len(is_it_ok) == 0:
-          print("aouh")
           raise Exception
         else:
           if is_it_ok == "Y":
@@ -65,17 +63,16 @@ def first_start():
             sleep(1)
             break
           else:
-            print("aouh")
             raise Exception      
       except:
-        print("t'es un peu bête toi? réponds moi par Y ou N")
+        print("T'es un peu bête toi? Réponds moi par Y ou N")
         print(Exception)
 
 def ask_subject():
   while True:
     try:
-      subjects = ["Allemand", "Art", "English", "Espagnol", "French", "Histoire/Geographie/EMC", "HGGSP", "HLP", "Mandarin", "Maths", "NSI", "OIB", "SES", "Sport"]
-      answer_subject = int(input("""Choose the number for the subject : \n1. Allemand\n2. Art\n3. English\n4. Espagnol\n5. French\n6. Histoire/Geographie/EMC\n7. HGGSP\n8. HLP\n9. Mandarin\n10. Maths\n11. NSI\n12. OIB\n13. SES\n14 Sport\n"""))
+      subjects = ["Allemand", "English", "Art", "Espagnol", "French", "Histoire/Géographie/EMC", "HGGSP", "HLP", "Mandarin", "Mathématiques", "NSI", "OIB", "SES", "Sport"]
+      answer_subject = int(input("""Choisissez le nombre correspondant à votre matière : \n1. Allemand\n2. Anglais\n3. Art\n4. Espagnol\n5. Français\n6. Histoire/Géographie/EMC\n7. HGGSP\n8. HLP\n9. Mandarin\n10. Mathématiques\n11. NSI\n12. OIB\n13. SES\n14 Sport\n"""))
       if answer_subject < 0:
         raise Exception
       elif answer_subject > 14:
@@ -86,13 +83,13 @@ def ask_subject():
         subject = subjects[answer_subject]
       break
     except:
-      print("You must enter a number!")
+      print("Vous devez entrer un nombre!")
 
 def ask_time(phrase_time):
   while True:
     try:
       times = ["08:30", "09:20", "10:10", "10:30", "11:20", "12:05", "12:25", "13:15", "14:05", "15:05", "15:55", "16:45", "17:35"]
-      answer_time = int(input(f"""Choose the number for the {phrase_time} : \n1. 08:30\n2. 09:20\n3. 10:10\n4. 10:30\n5. 11:20\n6. 12:05\n7. 12:25\n8. 13:15\n9. 14:05\n10. 15:05\n11. 15:55\n12. 16:45\n13. 17:35\n"""))
+      answer_time = int(input(f"""Choisissez le nombre correspondant à {phrase_time} : \n1. 08:30\n2. 09:20\n3. 10:10\n4. 10:30\n5. 11:20\n6. 12:05\n7. 12:25\n8. 13:15\n9. 14:05\n10. 15:05\n11. 15:55\n12. 16:45\n13. 17:35\n"""))
       if answer_time < 0:
         raise Exception
       elif answer_time > 13:
@@ -103,16 +100,16 @@ def ask_time(phrase_time):
         time = times[answer_time]
       break
     except:
-      print("You must enter a number!")
+      print("Vous devez entrer un nombre!")
 
 def ask_link():
   while True:
     try:
       global link
-      link = str(input("""Paste your link if you have any, else leave blank : """))
+      link = str(input("""Collez votre lien, sinon laissez vide : """))
       break
     except:
-      print("erreur : réponse non supporté")
+      print("Erreur : réponse non supportée")
 
 def name_matiere(courses):
   list_cours = ["première", "seconde", "troisième", "quatrième", "cinquième", "sixième", "septième"]
@@ -125,7 +122,6 @@ def def_classes2(day):
   global subject, time, link
   with open("config.json", "r") as config_jsonFile:
     config = json.load(config_jsonFile)
-  #for courses in config["Week"][f"{day}"]:
   name_matiere(courses)
   print(f"Quelle est ta {course} matière {day}? : ")
   ask_subject()
@@ -144,7 +140,7 @@ def number_courses(day):
   list_courses = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh"]
   while True:
     try:
-      nombre_courses = int(input(f"entrez le nombre de cours {day} : "))
+      nombre_courses = int(input(f"Entrez le nombre de cours {day} : "))
       if nombre_courses < 0:
         raise Exception
       elif nombre_courses > 7:
@@ -164,12 +160,12 @@ def number_courses(day):
             json.dump(config, config_jsonFile, indent=2, sort_keys=False)
         break
     except:
-      print("erreur : nombre non supporté")
+      print("Erreur : nombre non supportée")
 
 def time_notif():
   while True:
     try:
-      time_notif = int(input("""Choose the time for the notification (s):\n"""))
+      time_notif = int(input("""Choisissez le temps que avant que la notification disparaisse totalement (s):\n"""))
       if time_notif < 0:
         raise Exception
       elif time_notif > 600:
@@ -177,7 +173,7 @@ def time_notif():
       else:
         break
     except:
-      print("erreur : nombre non supporté")
+      print("Erreur : nombre non supportée")
   read_config()
   config["Info"]["time_notif"] = time_notif
   write_config(config)
@@ -185,7 +181,7 @@ def time_notif():
 def auto_open():
   while True:
     try:
-      auto_open = int(input("""Choose if the link auto-open in browser :\n1. Yes\n2. No\n"""))
+      auto_open = int(input("""Choisissez si le lien s'ouvre automatiquement dans votre navigateur :\n1. Yes\n2. No\n"""))
       if auto_open == 1:
         break
       elif auto_open == 2:
@@ -194,7 +190,7 @@ def auto_open():
       else:
         raise Exception
     except:
-      print("erreur : nombre non supporté")
+      print("Erreur : nombre non supportée")
   read_config()
   config["Info"]["auto_open"] = auto_open
   write_config(config)
@@ -202,51 +198,53 @@ def auto_open():
 def open_url(next_link):
   webbrowser.open(next_link, new=0, autoraise=True)
 
-def check_auto_open():
+def check_auto_open(next_link):
   if config["Info"]["auto_open"] == 1:
     open_url(next_link)
 
-def notif():
+def notif(next_link, next_course):
   if len(next_link) == 0:
-    toaster.show_toast("Class Alert!", f"Next class is in 5 minutes!\nYou will have {next_course}", icon_path="MMA_DC.ico", duration=config["Info"]["time_notif"], threaded=True)
+    toaster.show_toast("Class Alert!", f"Prochain cours dans 5 minutes!\nVous aurez {next_course}", icon_path="MMA_DC.ico", duration=config["Info"]["time_notif"], threaded=True)
   else:
-    toaster.show_toast("Class Alert!", f"Next class is in 5 minutes!\nYou will have {next_course}\nLink is : {next_link}", icon_path="MMA_DC.ico", duration=config["Info"]["time_notif"], threaded=True, callback_on_click=lambda: open_url(next_link))
-    print(config["Info"]["time_notif"])
-    check_auto_open()
+    toaster.show_toast("Class Alert!", f"Prochain cours dans 5 minutes!\nVous aurez {next_course}\nLe lien est : {next_link}", icon_path="MMA_DC.ico", duration=config["Info"]["time_notif"], threaded=True, callback_on_click=lambda: open_url(next_link))
+    check_auto_open(next_link)
 
-def check_time(today, course, next_course_start):
+def print_course_notif(next_link, next_course):
+  if len(next_link) == 0:
+    print(f"Cours de {next_course} dans 5 minutes!")
+  else:
+    print(f"Cours de {next_course} dans moins de 5 minutes!!! Lien :",  next_link)
+
+def check_time(today, course, next_course_start, next_link):
   while True:
-    print(today[f"{course}"])
     now_time = datetime.now().time()
     current_time_str = now.strftime("%H:%M")
-    print("time=", current_time_str)
-    print("wake up = ", next_course_start)
+    print("Prochain cours = ", next_course_start)
     next_course_start_time = datetime.strptime(next_course_start, "%H:%M").time()
     x = datetime.combine(date.today(), next_course_start_time) - datetime.combine(date.today(), now_time)
     y = str(x)
-    print(x)
     if y.startswith("0:05:0"):
-      print("time-5mins")
-      notif()
+      print_course_notif(next_link, next_course)
+      notif(next_link, next_course)
       break
-    elif y < "0:05:0":
-      print("time-5mins")
-      notif()
+    elif y < "0:":
+      print_course_notif(next_link, next_course)
+      notif(next_link, next_course)
       break
     elif y > "6:06":
-      print("wait 6hrs")
+      print(f"Il te reste {y}")
       sleep(60*60*6)
     elif y > "1:06":
-      print("wait 1hr")
+      print(f"Il te reste {y}")
       sleep(60*60*1)
     elif y > "0:36":
-      print("wait 30mins")
+      print(f"Il te reste {y}")
       sleep(60*30)
     elif y > "0:21":
-      print("wait 15mins")
+      print(f"Il te reste {y}")
       sleep(60*15)
     else:
-      print("wait 8s")
+      print(f"Il te reste {y}")
       sleep(8)
       
 read_config()
@@ -299,9 +297,9 @@ if config["Info"]["first_start"] == 0:
         print(today[f"{course}"]["matiere"], "déjà passé")
       else: 
         print(today[f"{course}"]["matiere"], "pas encore passé")
-        check_time(today, course, next_course_start)
+        check_time(today, course, next_course_start, next_link)
         
       write_config(config)
-    print("plus de cours aujourd'hui à demain")
+    print("Plus de cours aujourd'hui à demain ;)")
     while now.strftime("%A") == current_day_datetime:
       sleep(60*60*8)
