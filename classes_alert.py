@@ -19,7 +19,6 @@ except:
   config["Info"]["next_course"] = ""
   config["Info"]["next_heure"] = ""
   config["Info"]["next_url"] = ""
-  print(config)
   with open("config.json", "w") as config_jsonFile:
     json.dump(config ,config_jsonFile, indent=2, sort_keys=False)
 
@@ -66,7 +65,6 @@ def first_start():
             raise Exception      
       except:
         print("T'es un peu bête toi? Réponds moi par Y ou N")
-        print(Exception)
 
 def ask_subject():
   while True:
@@ -232,19 +230,19 @@ def check_time(today, course, next_course_start, next_link):
       notif(next_link, next_course)
       break
     elif y > "6:06":
-      print(f"Il te reste {y}")
+      print(f"Il te reste {y[0:1]} heures, {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(60*60*6)
     elif y > "1:06":
-      print(f"Il te reste {y}")
+      print(f"Il te reste {y[0:1]} heures, {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(60*60*1)
     elif y > "0:36":
-      print(f"Il te reste {y}")
+      print(f"Il te reste {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(60*30)
     elif y > "0:21":
-      print(f"Il te reste {y}")
+      print(f"Il te reste {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(60*15)
     else:
-      print(f"Il te reste {y}")
+      print(f"Il te reste {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(8)
       
 read_config()
