@@ -20,4 +20,4 @@ If a course isn't in the list or the time don't correspond with yours you can in
 you can reset the config file by closing the program and replace the **0** in the config.json ==> Info ==> "first_start": 1,
 
 ## Ideas/Issues :
-If you have any ideas or anything to say you can open an issue or contact me to : [mmathegeeking@gmail.com](mailto:mmathegeeking@gmail.com)
+If you have any ideas or anything to say you can open an issue or contact me at : [mmathegeeking@gmail.com](mailto:mmathegeeking@gmail.com)
