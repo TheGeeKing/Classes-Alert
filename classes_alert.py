@@ -36,7 +36,8 @@ def first_start():
   if config["Info"]["first_start"] == 1:
     print("Salut, je vais t'aider à arriver en cours à l'heure! :)")
     print("Pour cela tu vas devoir me donner tes matières, tes heures de cours et si tu en as un, un lien!")
-    print("Ensuite je t'enverrais une notification sur ton pc avant chaque cours! Si tu m'auras fourni un lien tu pourras cliquer sur la notification et ça l'ouvrira")
+    print("Ensuite je t'enverrais une notification sur ton pc avant chaque cours! Si tu m'as fourni un lien tu pourras cliquer sur la notification et ça l'ouvrira")
+    print("Je t'invite aussi à lire le fichier README.md sur github : https://github.com/TheGeeKing/Classes-Alert et check régulièrement si il y a eu une mise à jour")
     while True:
       try:
         is_it_ok = str(input("ça te va? Y/N : "))
@@ -73,7 +74,7 @@ def ask_subject():
       answer_subject = int(input("""Choisissez le nombre correspondant à votre matière : \n1. Allemand\n2. Anglais\n3. Art\n4. Espagnol\n5. Français\n6. Histoire/Géographie/EMC\n7. HGGSP\n8. HLP\n9. Mandarin\n10. Mathématiques\n11. NSI\n12. OIB\n13. SES\n14 Sport\n"""))
       if answer_subject < 0:
         raise Exception
-      elif answer_subject > 14:
+      elif answer_subject > len(subjects):
         raise Exception
       else:
         global subject
@@ -90,7 +91,7 @@ def ask_time(phrase_time):
       answer_time = int(input(f"""Choisissez le nombre correspondant à {phrase_time} : \n1. 08:30\n2. 09:20\n3. 10:10\n4. 10:30\n5. 11:20\n6. 12:05\n7. 12:25\n8. 13:15\n9. 14:05\n10. 15:05\n11. 15:55\n12. 16:45\n13. 17:35\n"""))
       if answer_time < 0:
         raise Exception
-      elif answer_time > 13:
+      elif answer_time > len(times):
         raise Exception
       else:
         global time
@@ -110,8 +111,8 @@ def ask_link():
       print("Erreur : réponse non supportée")
 
 def name_matiere(courses):
-  list_cours = ["première", "seconde", "troisième", "quatrième", "cinquième", "sixième", "septième"]
-  list_courses = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh"]
+  list_cours = ["première", "seconde", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dixième"]
+  list_courses = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth"]
   courses_index = list_courses.index(f"{courses}")
   global course
   course = list_cours[courses_index]
@@ -135,13 +136,13 @@ def def_classes2(day):
   write_config(config)
 
 def number_courses(day):
-  list_courses = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh"]
+  list_courses = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth"]
   while True:
     try:
       nombre_courses = int(input(f"Entrez le nombre de cours {day} : "))
       if nombre_courses < 0:
         raise Exception
-      elif nombre_courses > 7:
+      elif nombre_courses > len(list_courses):
         raise Exception
       else:
         with open("config.json", "r") as config_jsonFile:
@@ -207,17 +208,23 @@ def notif(next_link, next_course):
     toaster.show_toast("Class Alert!", f"Prochain cours dans 5 minutes!\nVous aurez {next_course}\nLe lien est : {next_link}", icon_path="MMA_DC.ico", duration=config["Info"]["time_notif"], threaded=True, callback_on_click=lambda: open_url(next_link))
     check_auto_open(next_link)
 
-def print_course_notif(next_link, next_course):
-  if len(next_link) == 0:
-    print(f"Cours de {next_course} dans 5 minutes!")
+def print_course_notif(next_link, next_course, less_than_5=0):
+  if less_than_5==0:
+    if len(next_link) == 0:
+      print(f"Cours de {next_course} dans 5 minutes!")
+    else:
+      print(f"Cours de {next_course} dans 5 minutes! Lien :",  next_link)
   else:
-    print(f"Cours de {next_course} dans moins de 5 minutes!!! Lien :",  next_link)
+    if len(next_link) == 0:
+      print(f"Cours de {next_course} dans moins de 5 minutes!!!")
+    else:
+      print(f"Cours de {next_course} dans moins de 5 minutes!!! Lien :",  next_link)
 
-def check_time(today, course, next_course_start, next_link):
+def check_time(next_course_start, next_link):
   while True:
     now_time = datetime.now().time()
     current_time_str = now.strftime("%H:%M")
-    print("Prochain cours = ", next_course_start)
+    print(f"Prochain cours : {next_course} ==>", next_course_start)
     next_course_start_time = datetime.strptime(next_course_start, "%H:%M").time()
     x = datetime.combine(date.today(), next_course_start_time) - datetime.combine(date.today(), now_time)
     y = str(x)
@@ -225,7 +232,7 @@ def check_time(today, course, next_course_start, next_link):
       print_course_notif(next_link, next_course)
       notif(next_link, next_course)
       break
-    elif y < "0:":
+    elif y < "0:05:0":
       print_course_notif(next_link, next_course)
       notif(next_link, next_course)
       break
@@ -264,6 +271,7 @@ if config["Info"]["start"] == 1:
   config["Info"]["first_start"] = 0
   write_config(config)
 
+sleep(1)
 read_config()
 if config["Info"]["first_start"] == 0:
   while True:
@@ -295,9 +303,10 @@ if config["Info"]["first_start"] == 0:
         print(today[f"{course}"]["matiere"], "déjà passé")
       else: 
         print(today[f"{course}"]["matiere"], "pas encore passé")
-        check_time(today, course, next_course_start, next_link)
+        check_time(next_course_start, next_link)
         
       write_config(config)
     print("Plus de cours aujourd'hui à demain ;)")
     while now.strftime("%A") == current_day_datetime:
-      sleep(60*60*8)
+      sleep(60*60*1)
+    print("Bonjour, reprise des cours! :)")
