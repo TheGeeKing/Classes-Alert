@@ -7,22 +7,8 @@ import webbrowser
 toaster = ToastNotifier()
 now = datetime.now()
 
-try:
-  with open("config.json", "r") as config_jsonFile:
-    config = json.load(config_jsonFile)
-except:
-  config = {}
-  config["Info"] = {}
-  config["Info"]["first_start"] = 1
-  config["Info"]["start"] = 0
-  config["Info"]["name"] = ""
-  config["Info"]["next_course"] = ""
-  config["Info"]["next_heure"] = ""
-  config["Info"]["next_url"] = ""
-  with open("config.json", "w") as config_jsonFile:
-    json.dump(config ,config_jsonFile, indent=2, sort_keys=False)
-
 def read_config():
+  global config
   with open("config.json", "r") as config_jsonFile:
     config = json.load(config_jsonFile)
 
@@ -53,7 +39,7 @@ def first_start():
             config["Info"]["start"] = 1
             sleep(1)
             write_config(config)
-            sleep(2)
+            sleep(1)
             break
           elif is_it_ok == "N":
             print("Bon bah a+ alors")
@@ -145,8 +131,7 @@ def number_courses(day):
       elif nombre_courses > len(list_courses):
         raise Exception
       else:
-        with open("config.json", "r") as config_jsonFile:
-          config = json.load(config_jsonFile)
+        read_config()
         nombre_courses_index = nombre_courses
         nombre_courses_index -= 1
         x = 0
@@ -155,13 +140,13 @@ def number_courses(day):
         while x != nombre_courses_index+1:
           config["Week"][f"{day}"][f"{list_courses[x]}"] = {}
           x +=1
-          with open("config.json", "w") as config_jsonFile:
-            json.dump(config, config_jsonFile, indent=2, sort_keys=False)
+          write_config(config)
         break
     except:
       print("Erreur : nombre non supportée")
 
 def time_notif():
+  read_config()
   while True:
     try:
       time_notif = int(input("""Choisissez le temps que avant que la notification disparaisse totalement (s):\n"""))
@@ -173,11 +158,11 @@ def time_notif():
         break
     except:
       print("Erreur : nombre non supportée")
-  read_config()
   config["Info"]["time_notif"] = time_notif
   write_config(config)
 
 def auto_open():
+  read_config()
   while True:
     try:
       auto_open = int(input("""Choisissez si le lien s'ouvre automatiquement dans votre navigateur :\n1. Yes\n2. No\n"""))
@@ -190,7 +175,6 @@ def auto_open():
         raise Exception
     except:
       print("Erreur : nombre non supportée")
-  read_config()
   config["Info"]["auto_open"] = auto_open
   write_config(config)
 
@@ -251,27 +235,23 @@ def check_time(next_course_start, next_link):
     else:
       print(f"Il te reste {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(8)
-      
+     
 read_config()
 if config["Info"]["first_start"] == 1:
   first_start()
 
-read_config()
 if config["Info"]["start"] == 1:
   list_days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"]
   for day in list_days:
     number_courses(day)
-  read_config()
   for day in config["Week"]:
     for courses in config["Week"][f"{day}"]:
       def_classes2(day)
-  read_config()
   time_notif()
   auto_open()
   config["Info"]["first_start"] = 0
   write_config(config)
 
-sleep(1)
 read_config()
 if config["Info"]["first_start"] == 0:
   while True:
