@@ -3,6 +3,11 @@ Be notify 5 minutes before the lesson start | Classes Alert by MMA
 
 As it is an Apache 2.0 license : Apache License 2.0 allows users of the software to distribute, modify, or otherwise use software for any purpose, as long as the user complies with the license terms. The terms state that users can’t remove existing copyright, patent, trademarks and attribution notices.
 
+## Update:
+If you want to update your Classes Alert version :
+1. Delete all your previous file version **except** the config.json file
+2. Download the zip version and copy all the files **except** the config.json file and past them in your previous version directory
+
 ## Use/Start:
 Run the .exe file in the folder and follow the instruction.
 For the moment you will need to start the .exe at each start up of your computer.
