@@ -13,8 +13,8 @@ If a course isn't in the list or the time don't correspond with yours you can in
 
   * config.json : 
     - You can edit the config.json file with custome names :
-      replace the names in matiere fields with what you want
-      replace the times in heure_start with what you want
+      replace the names in "matiere" fields with what you want
+      replace the times in "heure_start" with what you want
       
 ## Reset :
 you can reset the config file by closing the program and replace the **0** in the config.json ==> Info ==> "first_start": 1,
