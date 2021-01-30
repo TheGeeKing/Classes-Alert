@@ -3,9 +3,13 @@ from win10toast import ToastNotifier
 from datetime import datetime, date
 from time import sleep
 import webbrowser
+import ctypes
 
 toaster = ToastNotifier()
 now = datetime.now()
+
+kernel32 = ctypes.windll.kernel32
+kernel32.SetConsoleMode(kernel32.GetStdHandle(-10), (0x4|0x80|0x20|0x2|0x10|0x1|0x00|0x100))
 
 def read_config():
   global config
@@ -112,10 +116,10 @@ def def_classes2(day):
   ask_subject()
   config["Week"][f"{day}"][f"{courses}"]["matiere"] = subject
   print("Quelle est l'heure de début? : ")
-  ask_time("start time")
+  ask_time("l'heure de début")
   config["Week"][f"{day}"][f"{courses}"]["heure_start"] = time
   print("Quelle est l'heure de fin? : ")
-  ask_time("end time")
+  ask_time("l'heure de fin")
   config["Week"][f"{day}"][f"{courses}"]["heure_end"] = time
   ask_link()
   config["Week"][f"{day}"][f"{courses}"]["link"] = link
@@ -135,7 +139,6 @@ def number_courses(day):
         nombre_courses_index = nombre_courses
         nombre_courses_index -= 1
         x = 0
-        course = list_courses[x]
         config["Week"][f"{day}"] = {}
         while x != nombre_courses_index+1:
           config["Week"][f"{day}"][f"{list_courses[x]}"] = {}
@@ -207,7 +210,6 @@ def print_course_notif(next_link, next_course, less_than_5=0):
 def check_time(next_course_start, next_link):
   while True:
     now_time = datetime.now().time()
-    current_time_str = now.strftime("%H:%M")
     print(f"Prochain cours : {next_course} ==>", next_course_start)
     next_course_start_time = datetime.strptime(next_course_start, "%H:%M").time()
     x = datetime.combine(date.today(), next_course_start_time) - datetime.combine(date.today(), now_time)
@@ -220,6 +222,9 @@ def check_time(next_course_start, next_link):
       print_course_notif(next_link, next_course)
       notif(next_link, next_course)
       break
+    elif y > "10:06":
+      print(f"Il te reste {y[0:2]} heures, {y[3:5]} minutes et {y[6:8]} secondes")
+      sleep(60*60*10)
     elif y > "6:06":
       print(f"Il te reste {y[0:1]} heures, {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(60*60*6)
@@ -232,6 +237,9 @@ def check_time(next_course_start, next_link):
     elif y > "0:21":
       print(f"Il te reste {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(60*15)
+    elif y > "0:11":
+      print(f"Il te reste {y[2:4]} minutes et {y[5:7]} secondes")
+      sleep(60*5)
     else:
       print(f"Il te reste {y[2:4]} minutes et {y[5:7]} secondes")
       sleep(8)
@@ -255,7 +263,7 @@ if config["Info"]["start"] == 1:
 read_config()
 if config["Info"]["first_start"] == 0:
   while True:
-    current_day_datetime = now.strftime("%A")
+    current_day_datetime = datetime.now().strftime("%A")
     list_days_fr = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"]
     list_days_en = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     while True:
@@ -263,7 +271,9 @@ if config["Info"]["first_start"] == 0:
         day_index = list_days_en.index(f"{current_day_datetime}")
         break
       except:
-        sleep(60)
+        print("Bon Week-End! :)")
+        sleep(60*60*8)
+        current_day_datetime = datetime.now().strftime("%A")
     current_day = list_days_fr[day_index]
     read_config()
     auj = {}
@@ -286,7 +296,7 @@ if config["Info"]["first_start"] == 0:
         check_time(next_course_start, next_link)
         
       write_config(config)
-    print("Plus de cours aujourd'hui à demain ;)")
-    while now.strftime("%A") == current_day_datetime:
+    print("Plus de cours aujourd'hui, à demain ;)")
+    while current_day_datetime == datetime.now().strftime("%A"):
       sleep(60*60*1)
     print("Bonjour, reprise des cours! :)")
